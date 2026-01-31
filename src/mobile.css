@@ -1,0 +1,682 @@
+/* ===========================================
+   MOBILE OPTIMIZATION STYLES
+   Responsive design for phones & tablets
+   PERFORMANCE-FOCUSED for smooth 60fps
+   =========================================== */
+
+/* ===========================================
+   CRITICAL MOBILE PERFORMANCE FIXES
+   Disable expensive effects on mobile
+   =========================================== */
+@media (max-width: 768px) {
+  /* KILL ALL BLUR EFFECTS - Major GPU drain */
+  .backdrop-blur-sm,
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Replace blur with solid backgrounds */
+  .content-panel {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+  }
+  
+  /* DISABLE ALL ATMOSPHERE EFFECTS */
+  .rain-drop,
+  .smoke-particle,
+  .dust-particle,
+  .cigarette-wisp,
+  .smoke-wisp,
+  .smoke-rising,
+  [class*="smoke"],
+  [class*="rain"],
+  [class*="dust"],
+  [class*="particle"] {
+    display: none !important;
+  }
+  
+  /* DISABLE FILM GRAIN - Heavy SVG filter */
+  .grain-animated,
+  [class*="grain"] {
+    display: none !important;
+  }
+  
+  /* DISABLE FLICKERING LIGHTS */
+  .spotlight-flicker,
+  .neon-flicker-burst,
+  [class*="flicker"] {
+    animation: none !important;
+  }
+  
+  /* STOP ALL NON-ESSENTIAL ANIMATIONS */
+  .location-bg::before,
+  .location-bg::after,
+  .bg-ember-room::before,
+  .bg-van-gelder-studio::before,
+  .bg-earl-apartment::before,
+  .bg-birdland::before,
+  .bg-lorraine-brownstone::before {
+    animation: none !important;
+    display: none !important;
+  }
+  
+  /* Simplify vignette */
+  .enhanced-vignette {
+    background: radial-gradient(ellipse at center, 
+      transparent 50%, 
+      rgba(0, 0, 0, 0.3) 100%
+    ) !important;
+  }
+  
+  /* Use GPU-accelerated transforms only */
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Disable filter effects */
+  .character-portrait::after {
+    display: none !important;
+  }
+  
+  /* Simplify box shadows */
+  .choice-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .choice-btn:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+/* ===========================================
+   SAFE AREA INSETS (iPhone X+ notch support)
+   =========================================== */
+.safe-area-padding {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* ===========================================
+   MOBILE TYPOGRAPHY SCALING
+   =========================================== */
+@media (max-width: 640px) {
+  /* Scale down all display text */
+  .font-display {
+    letter-spacing: 0.05em !important;
+  }
+  
+  /* Title screen specific */
+  .title-mobile {
+    font-size: 3.5rem !important;
+    line-height: 1 !important;
+  }
+  
+  /* Reduce large text sizes */
+  .text-7xl, .text-8xl, .text-9xl {
+    font-size: 2.5rem !important;
+    line-height: 1.1 !important;
+  }
+  
+  .text-5xl, .text-6xl {
+    font-size: 1.75rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .text-4xl {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+  }
+  
+  .text-3xl {
+    font-size: 1.25rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  .text-2xl {
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  .text-xl {
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* ===========================================
+   MOBILE SPACING
+   =========================================== */
+@media (max-width: 640px) {
+  /* Reduce padding on containers */
+  .p-8 { padding: 1rem !important; }
+  .p-10 { padding: 1.25rem !important; }
+  .p-12 { padding: 1.5rem !important; }
+  .p-16 { padding: 1.5rem !important; }
+  .p-20 { padding: 1.5rem !important; }
+  
+  /* Reduce horizontal padding */
+  .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .px-10 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  .px-12 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+  
+  /* Reduce vertical padding */
+  .py-5 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+  .py-8 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+  
+  /* Reduce margins */
+  .mb-12 { margin-bottom: 2rem !important; }
+  .mb-16 { margin-bottom: 2.5rem !important; }
+  .mb-20 { margin-bottom: 3rem !important; }
+  
+  /* Reduce gaps */
+  .gap-6 { gap: 1rem !important; }
+  .gap-8 { gap: 1.25rem !important; }
+}
+
+/* ===========================================
+   MOBILE TOUCH TARGETS
+   Minimum 44px for comfortable tapping
+   =========================================== */
+@media (max-width: 640px) {
+  /* Ensure buttons are touch-friendly */
+  button, 
+  .choice-btn,
+  [role="button"] {
+    min-height: 44px;
+  }
+  
+  /* Choice buttons mobile optimization */
+  .choice-btn {
+    padding: 1rem 1.25rem !important;
+  }
+  
+  .choice-btn:hover {
+    padding-left: 1.5rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE BOTTOM ACTION BAR
+   Fixed navigation with safe area
+   =========================================== */
+@media (max-width: 640px) {
+  .mobile-bottom-bar {
+    padding: 0.75rem !important;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)) !important;
+    gap: 0.5rem !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  
+  .mobile-bottom-bar button {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  
+  .mobile-bottom-bar button span:first-child {
+    font-size: 1.25rem !important;
+  }
+  
+  /* Hide text on very small screens, show only icons */
+  @media (max-width: 380px) {
+    .mobile-bottom-bar button span:last-child:not(:first-child) {
+      display: none !important;
+    }
+    
+    .mobile-bottom-bar button {
+      padding: 0.75rem !important;
+      justify-content: center !important;
+    }
+  }
+}
+
+/* ===========================================
+   MOBILE CHARACTER PORTRAITS
+   =========================================== */
+@media (max-width: 640px) {
+  .character-portrait {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  /* Dialogue screen portrait */
+  .portrait-large {
+    width: 100px !important;
+    height: 100px !important;
+  }
+}
+
+/* ===========================================
+   MOBILE HEADER/TIME INDICATOR
+   =========================================== */
+@media (max-width: 640px) {
+  .mobile-time-indicator {
+    position: fixed !important;
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+    padding: 0.25rem 0.5rem !important;
+    background: rgba(0,0,0,0.7) !important;
+    border-radius: 4px !important;
+    z-index: 30 !important;
+  }
+  
+  .mobile-time-indicator p {
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE DIALOGUE BOX
+   =========================================== */
+@media (max-width: 640px) {
+  .dialogue-container {
+    padding: 1rem !important;
+    padding-bottom: 5rem !important;
+  }
+  
+  .dialogue-header {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    align-items: flex-start !important;
+  }
+  
+  .dialogue-text {
+    font-size: 1.25rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  .dialogue-responses {
+    margin-top: 1rem !important;
+  }
+  
+  .dialogue-response-btn {
+    font-size: 1rem !important;
+    padding: 0.875rem !important;
+  }
+  
+  /* Fixed back button at bottom - NO BLUR */
+  .dialogue-back-btn {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    padding: 1rem !important;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom)) !important;
+    background: rgba(20, 20, 20, 0.98) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    z-index: 40 !important;
+  }
+}
+
+/* ===========================================
+   MOBILE JOURNAL
+   =========================================== */
+@media (max-width: 640px) {
+  .journal-section-icon {
+    font-size: 2rem !important;
+  }
+  
+  .journal-section-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .journal-clue-item {
+    padding: 0.75rem !important;
+  }
+  
+  .journal-note-item {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE TITLE SCREEN
+   =========================================== */
+@media (max-width: 640px) {
+  .title-screen-title {
+    font-size: 4rem !important;
+    line-height: 0.9 !important;
+  }
+  
+  .title-screen-subtitle {
+    font-size: 1.25rem !important;
+  }
+  
+  .title-screen-location {
+    font-size: 1rem !important;
+    letter-spacing: 0.2em !important;
+  }
+  
+  .title-screen-buttons {
+    gap: 0.75rem !important;
+  }
+  
+  .title-screen-buttons button {
+    padding: 1rem 2rem !important;
+    font-size: 1.5rem !important;
+  }
+  
+  .title-screen-tagline {
+    font-size: 0.875rem !important;
+    padding: 0 1rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE TRAVEL SCREEN
+   =========================================== */
+@media (max-width: 640px) {
+  .location-card {
+    padding: 1rem !important;
+  }
+  
+  .location-card h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  .location-card p {
+    font-size: 0.9rem !important;
+  }
+  
+  .travel-action-buttons {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  
+  .travel-action-buttons button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  
+  .progress-card {
+    padding: 1rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE EXAMINE VIEW
+   =========================================== */
+@media (max-width: 640px) {
+  .examine-container {
+    padding: 1rem !important;
+    padding-bottom: 5rem !important;
+  }
+  
+  .examine-description {
+    font-size: 1rem !important;
+  }
+  
+  .examine-clue-card {
+    padding: 1rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE ACCUSATION SCREEN
+   =========================================== */
+@media (max-width: 640px) {
+  .suspect-card {
+    padding: 1rem !important;
+  }
+  
+  .suspect-portrait {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .accusation-form {
+    padding: 1rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE EVIDENCE BOARD
+   =========================================== */
+@media (max-width: 640px) {
+  .evidence-board-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .evidence-card {
+    min-width: 200px !important;
+    padding: 0.75rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE TIMELINE
+   =========================================== */
+@media (max-width: 640px) {
+  .timeline-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: 1rem !important;
+  }
+  
+  .timeline-event {
+    min-width: 120px !important;
+    font-size: 0.75rem !important;
+  }
+}
+
+/* ===========================================
+   MOBILE VIGNETTE ADJUSTMENT
+   Less intense on small screens
+   =========================================== */
+@media (max-width: 640px) {
+  .enhanced-vignette {
+    background: radial-gradient(ellipse at center, 
+      transparent 40%, 
+      rgba(0, 0, 0, 0.15) 75%,
+      rgba(0, 0, 0, 0.35) 100%
+    ) !important;
+  }
+}
+
+/* ===========================================
+   MOBILE CONTENT PANEL
+   =========================================== */
+@media (max-width: 640px) {
+  .content-panel {
+    padding: 1rem !important;
+    margin: 0 -0.5rem !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* ===========================================
+   MOBILE TOOLTIP - Convert to bottom sheet
+   =========================================== */
+@media (max-width: 640px) {
+  /* Hide desktop tooltips */
+  [data-tooltip] {
+    display: none !important;
+  }
+}
+
+/* ===========================================
+   MOBILE SCROLL BEHAVIOR
+   =========================================== */
+@media (max-width: 640px) {
+  /* Ensure content doesn't get hidden behind fixed bars */
+  .mobile-content-area {
+    padding-bottom: 80px !important;
+  }
+  
+  /* Smooth scrolling */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===========================================
+   MOBILE KEYBOARD HANDLING
+   =========================================== */
+@media (max-width: 640px) {
+  /* When keyboard is open, adjust fixed elements */
+  .keyboard-open .fixed.bottom-0 {
+    position: absolute !important;
+  }
+}
+
+/* ===========================================
+   LANDSCAPE MOBILE OPTIMIZATION
+   =========================================== */
+@media (max-width: 896px) and (orientation: landscape) {
+  /* Reduce vertical padding in landscape */
+  .landscape-compact {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  
+  /* Side-by-side layout for dialogue */
+  .landscape-dialogue {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 1rem !important;
+  }
+  
+  .landscape-dialogue .portrait-section {
+    flex: 0 0 120px !important;
+  }
+  
+  .landscape-dialogue .text-section {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    max-height: calc(100vh - 100px) !important;
+  }
+}
+
+/* ===========================================
+   TABLET OPTIMIZATION (768px - 1024px)
+   =========================================== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Slightly reduced font sizes */
+  .text-7xl, .text-8xl, .text-9xl {
+    font-size: 4rem !important;
+  }
+  
+  .text-5xl, .text-6xl {
+    font-size: 2.5rem !important;
+  }
+  
+  /* Two-column layout for travel */
+  .tablet-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  /* Better use of space */
+  .tablet-padding {
+    padding: 2rem !important;
+  }
+}
+
+/* ===========================================
+   ACCESSIBILITY - REDUCED MOTION
+   =========================================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .scroll-smooth {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===========================================
+   MOBILE PERFORMANCE - HARDWARE ACCELERATION
+   Force GPU compositing for smooth scrolling
+   =========================================== */
+@media (max-width: 768px) {
+  .location-bg,
+  .enhanced-vignette,
+  .content-panel,
+  .choice-btn,
+  .character-portrait {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Optimize scroll containers */
+  .scroll-smooth,
+  [class*="overflow"] {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Reduce paint areas */
+  .fixed {
+    contain: layout style;
+  }
+}
+
+/* ===========================================
+   HIGH CONTRAST MODE
+   =========================================== */
+@media (prefers-contrast: high) {
+  .choice-btn {
+    border-width: 3px !important;
+  }
+  
+  .text-light-muted {
+    color: rgba(255, 250, 245, 1) !important;
+  }
+  
+  .text-light-subtle {
+    color: rgba(255, 250, 245, 0.9) !important;
+  }
+}
+
+/* ===========================================
+   DARK MODE (respects system preference)
+   =========================================== */
+@media (prefers-color-scheme: dark) {
+  /* Already dark, but ensure consistency */
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* ===========================================
+   PRINT STYLES (disable for print)
+   =========================================== */
+@media print {
+  .location-bg,
+  .enhanced-vignette,
+  .smoke,
+  [class*="animation"],
+  .fixed {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

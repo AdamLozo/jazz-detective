@@ -1,0 +1,1991 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap');
+
+/* Mobile-first responsive styles */
+@import './mobile.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-jazz-cream text-jazz-black font-serif;
+}
+
+/* ===========================================
+   ATMOSPHERIC LOCATION BACKGROUNDS
+   1950s Noir Jazz - Immersive Environments
+   =========================================== */
+
+/* ============================================
+   BASE BACKGROUND SYSTEM
+   ============================================ */
+.location-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.location-bg::before,
+.location-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+/* Film grain overlay for all locations */
+.location-bg::after {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  animation: grainShift 0.5s steps(1) infinite;
+}
+
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, 2px); }
+  50% { transform: translate(2px, -2px); }
+  75% { transform: translate(-1px, -1px); }
+}
+
+/* ============================================
+   THE EMBER ROOM - Smoky Jazz Club
+   Red/amber spotlight, cigarette haze
+   ============================================ */
+.bg-ember-room {
+  background: 
+    /* Ceiling darkness */
+    linear-gradient(180deg, 
+      rgba(15, 10, 10, 0.95) 0%, 
+      rgba(25, 18, 15, 0.7) 30%,
+      rgba(35, 25, 20, 0.4) 100%
+    ),
+    /* Stage spotlight cone */
+    radial-gradient(ellipse 60% 80% at 30% 85%, 
+      rgba(212, 165, 116, 0.25) 0%, 
+      rgba(180, 120, 80, 0.15) 30%,
+      transparent 60%
+    ),
+    /* Secondary warm light */
+    radial-gradient(ellipse 40% 50% at 75% 90%, 
+      rgba(200, 100, 80, 0.15) 0%, 
+      transparent 50%
+    ),
+    /* Bar area glow */
+    radial-gradient(ellipse 80% 30% at 50% 100%, 
+      rgba(212, 165, 116, 0.2) 0%, 
+      transparent 70%
+    ),
+    /* Deep club background */
+    linear-gradient(135deg, 
+      #1a0f0f 0%, 
+      #2d1a15 50%, 
+      #1a1210 100%
+    );
+}
+
+.bg-ember-room::before {
+  /* Smoke layers */
+  background: 
+    radial-gradient(ellipse 100% 40% at 20% 60%, 
+      rgba(180, 160, 140, 0.08) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(ellipse 80% 30% at 70% 40%, 
+      rgba(160, 140, 130, 0.06) 0%, 
+      transparent 40%
+    ),
+    radial-gradient(ellipse 120% 50% at 50% 80%, 
+      rgba(150, 130, 120, 0.1) 0%, 
+      transparent 60%
+    );
+  animation: smokeFloat 20s ease-in-out infinite;
+}
+
+@keyframes smokeFloat {
+  0%, 100% { 
+    opacity: 1; 
+    transform: translateY(0) translateX(0);
+  }
+  33% { 
+    opacity: 0.8; 
+    transform: translateY(-15px) translateX(10px);
+  }
+  66% { 
+    opacity: 0.9; 
+    transform: translateY(-5px) translateX(-8px);
+  }
+}
+
+/* Ember Room spotlight flicker */
+.spotlight-flicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse 50% 70% at 30% 85%, 
+    rgba(212, 165, 116, 0.1) 0%, 
+    transparent 50%
+  );
+  animation: spotlightPulse 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes spotlightPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+  85% { opacity: 1; }
+  87% { opacity: 0.5; }
+  89% { opacity: 1; }
+}
+
+/* ============================================
+   VAN GELDER'S STUDIO - Dawn Recording Session
+   Cool blue-gray, technical, tape reels
+   ============================================ */
+.bg-van-gelder-studio {
+  background: 
+    /* Early morning window light */
+    linear-gradient(135deg, 
+      rgba(180, 190, 200, 0.3) 0%, 
+      rgba(150, 165, 185, 0.2) 30%,
+      transparent 60%
+    ),
+    /* Cool ambient light */
+    radial-gradient(ellipse 80% 60% at 20% 20%, 
+      rgba(200, 210, 220, 0.25) 0%, 
+      transparent 50%
+    ),
+    /* Equipment glow */
+    radial-gradient(circle at 80% 70%, 
+      rgba(100, 180, 200, 0.08) 0%, 
+      transparent 30%
+    ),
+    /* VU meter green glow */
+    radial-gradient(ellipse 8% 20% at 85% 50%, 
+      rgba(80, 200, 120, 0.12) 0%, 
+      transparent 70%
+    ),
+    /* Base gradient */
+    linear-gradient(180deg, 
+      #2a3038 0%, 
+      #1e2428 40%,
+      #1a1e22 100%
+    );
+}
+
+.bg-van-gelder-studio::before {
+  /* Tape reel subtle pattern */
+  background-image: 
+    radial-gradient(circle at 88% 28%, 
+      rgba(60, 70, 80, 0.3) 0%, 
+      rgba(40, 50, 60, 0.2) 8%,
+      transparent 12%
+    ),
+    radial-gradient(circle at 88% 28%, 
+      transparent 4%, 
+      rgba(80, 90, 100, 0.15) 5%,
+      transparent 6%
+    );
+  animation: meterPulse 2s ease-in-out infinite;
+}
+
+@keyframes meterPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ============================================
+   EARL'S APARTMENT - Ransacked, Morning Light
+   Dusty golden light through venetian blinds
+   ============================================ */
+.bg-earl-apartment {
+  background: 
+    /* Venetian blind light stripes */
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 60px,
+      rgba(255, 245, 220, 0.06) 60px,
+      rgba(255, 245, 220, 0.1) 70px,
+      transparent 70px,
+      transparent 90px
+    ),
+    /* Dusty morning light shaft */
+    linear-gradient(135deg, 
+      rgba(255, 240, 200, 0.2) 0%, 
+      rgba(255, 230, 180, 0.12) 25%,
+      transparent 50%
+    ),
+    /* Dust particles in light */
+    radial-gradient(ellipse 60% 80% at 25% 30%, 
+      rgba(255, 245, 220, 0.08) 0%, 
+      transparent 40%
+    ),
+    /* Darker corners - ransacked feel */
+    radial-gradient(ellipse 100% 100% at 90% 90%, 
+      rgba(30, 25, 20, 0.5) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(ellipse 80% 80% at 100% 0%, 
+      rgba(30, 25, 20, 0.3) 0%, 
+      transparent 40%
+    ),
+    /* Base - aged wallpaper feel */
+    linear-gradient(180deg, 
+      #4a4035 0%, 
+      #3d352c 50%,
+      #2e2822 100%
+    );
+}
+
+.bg-earl-apartment::before {
+  /* Floating dust particles */
+  background-image: 
+    radial-gradient(circle at 20% 25%, rgba(255, 250, 230, 0.5) 0%, transparent 2px),
+    radial-gradient(circle at 35% 40%, rgba(255, 250, 230, 0.4) 0%, transparent 1px),
+    radial-gradient(circle at 50% 20%, rgba(255, 250, 230, 0.6) 0%, transparent 2px),
+    radial-gradient(circle at 15% 55%, rgba(255, 250, 230, 0.35) 0%, transparent 1px),
+    radial-gradient(circle at 40% 60%, rgba(255, 250, 230, 0.5) 0%, transparent 2px),
+    radial-gradient(circle at 25% 75%, rgba(255, 250, 230, 0.4) 0%, transparent 1px),
+    radial-gradient(circle at 55% 35%, rgba(255, 250, 230, 0.45) 0%, transparent 2px),
+    radial-gradient(circle at 10% 80%, rgba(255, 250, 230, 0.35) 0%, transparent 1px),
+    radial-gradient(circle at 45% 15%, rgba(255, 250, 230, 0.5) 0%, transparent 2px);
+  animation: dustFloat 25s linear infinite;
+}
+
+@keyframes dustFloat {
+  0% { transform: translateY(0) translateX(0); opacity: 1; }
+  25% { transform: translateY(-20px) translateX(8px); opacity: 0.8; }
+  50% { transform: translateY(-35px) translateX(15px); opacity: 0.9; }
+  75% { transform: translateY(-15px) translateX(5px); opacity: 0.85; }
+  100% { transform: translateY(0) translateX(0); opacity: 1; }
+}
+
+/* ============================================
+   LORRAINE'S BROWNSTONE - Elegant, Warm
+   Sepia tones, parlor warmth, dignity
+   ============================================ */
+.bg-lorraine-brownstone {
+  background: 
+    /* Warm parlor light */
+    radial-gradient(ellipse 70% 50% at 30% 60%, 
+      rgba(220, 180, 140, 0.18) 0%, 
+      transparent 50%
+    ),
+    /* Window light */
+    linear-gradient(160deg, 
+      rgba(255, 245, 230, 0.12) 0%, 
+      transparent 40%
+    ),
+    /* Lamp glow */
+    radial-gradient(circle at 75% 35%, 
+      rgba(255, 220, 180, 0.15) 0%, 
+      rgba(255, 200, 150, 0.08) 15%,
+      transparent 30%
+    ),
+    /* Fireplace warmth hint */
+    radial-gradient(ellipse 60% 30% at 20% 90%, 
+      rgba(255, 150, 100, 0.08) 0%, 
+      transparent 40%
+    ),
+    /* Rich wallpaper base */
+    linear-gradient(180deg, 
+      #4d3d30 0%, 
+      #3d3025 40%,
+      #2d2520 100%
+    );
+}
+
+.bg-lorraine-brownstone::before {
+  /* Elegant damask pattern overlay */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 15 L45 15 L37 22 L40 32 L30 26 L20 32 L23 22 L15 15 L25 15 Z' fill='none' stroke='rgba(180,150,120,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
+  opacity: 0.6;
+}
+
+/* ============================================
+   BIRDLAND - Neon Jazz Corner
+   Electric neon glow, 52nd Street energy
+   ============================================ */
+.bg-birdland {
+  background: 
+    /* Neon sign glow - red BIRDLAND */
+    radial-gradient(ellipse 50% 25% at 50% 8%, 
+      rgba(255, 50, 50, 0.25) 0%, 
+      rgba(255, 30, 30, 0.12) 40%,
+      transparent 70%
+    ),
+    /* Neon sign glow - blue accent */
+    radial-gradient(ellipse 35% 18% at 42% 10%, 
+      rgba(60, 120, 255, 0.18) 0%, 
+      transparent 60%
+    ),
+    /* Street light pools */
+    radial-gradient(ellipse 50% 40% at 15% 95%, 
+      rgba(255, 230, 180, 0.12) 0%, 
+      transparent 45%
+    ),
+    radial-gradient(ellipse 50% 40% at 85% 95%, 
+      rgba(255, 230, 180, 0.1) 0%, 
+      transparent 45%
+    ),
+    /* Club interior warmth */
+    radial-gradient(ellipse 100% 60% at 50% 100%, 
+      rgba(180, 120, 80, 0.15) 0%, 
+      transparent 50%
+    ),
+    /* Window reflections */
+    radial-gradient(ellipse 20% 30% at 25% 40%, 
+      rgba(255, 200, 150, 0.06) 0%, 
+      transparent 50%
+    ),
+    /* Urban night base */
+    linear-gradient(180deg, 
+      #0a0810 0%, 
+      #151218 30%,
+      #1a1520 60%,
+      #201a25 100%
+    );
+}
+
+.bg-birdland::before {
+  /* Neon flicker effect */
+  background: 
+    radial-gradient(ellipse 50% 25% at 50% 8%, 
+      rgba(255, 50, 50, 0.15) 0%, 
+      transparent 60%
+    );
+  animation: neonFlicker 4s ease-in-out infinite;
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.3; }
+  94% { opacity: 1; }
+  95% { opacity: 0.8; }
+  96% { opacity: 0.4; }
+  97% { opacity: 1; }
+}
+
+/* ============================================
+   TITLE SCREEN BACKGROUND
+   Dramatic noir opening
+   ============================================ */
+.bg-title-screen {
+  background: 
+    /* Dramatic spotlight from above */
+    radial-gradient(ellipse 40% 50% at 50% 60%, 
+      rgba(212, 165, 116, 0.12) 0%, 
+      transparent 50%
+    ),
+    /* Corner shadows - deep noir */
+    radial-gradient(ellipse 70% 70% at 0% 0%, 
+      rgba(0, 0, 0, 0.5) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(ellipse 70% 70% at 100% 100%, 
+      rgba(0, 0, 0, 0.5) 0%, 
+      transparent 50%
+    ),
+    radial-gradient(ellipse 60% 60% at 100% 0%, 
+      rgba(0, 0, 0, 0.3) 0%, 
+      transparent 40%
+    ),
+    radial-gradient(ellipse 60% 60% at 0% 100%, 
+      rgba(0, 0, 0, 0.3) 0%, 
+      transparent 40%
+    ),
+    /* Deep noir base */
+    linear-gradient(180deg, 
+      #080606 0%, 
+      #1a1412 50%,
+      #0d0a08 100%
+    );
+}
+
+/* ============================================
+   PROLOGUE BACKGROUND
+   Atmospheric tension
+   ============================================ */
+.bg-prologue {
+  background: 
+    /* Mysterious light source */
+    radial-gradient(ellipse 60% 40% at 50% 85%, 
+      rgba(180, 160, 140, 0.1) 0%, 
+      transparent 60%
+    ),
+    /* Subtle blue moonlight */
+    radial-gradient(ellipse 80% 50% at 80% 20%, 
+      rgba(100, 120, 150, 0.08) 0%, 
+      transparent 50%
+    ),
+    /* Deep shadows */
+    linear-gradient(180deg, 
+      #0d0a08 0%, 
+      #1a1510 60%,
+      #0f0c0a 100%
+    );
+}
+
+/* ============================================
+   JOURNAL BACKGROUND
+   Desk lamp, late night review
+   ============================================ */
+.bg-journal {
+  background: 
+    /* Desk lamp light cone */
+    radial-gradient(ellipse 50% 40% at 25% 25%, 
+      rgba(255, 240, 200, 0.18) 0%, 
+      rgba(255, 220, 180, 0.08) 30%,
+      transparent 55%
+    ),
+    /* Paper stack highlight */
+    radial-gradient(ellipse 60% 50% at 50% 50%, 
+      rgba(255, 250, 240, 0.05) 0%, 
+      transparent 40%
+    ),
+    /* Aged paper feel */
+    linear-gradient(180deg, 
+      #3d352d 0%, 
+      #2e2822 60%,
+      #252018 100%
+    );
+}
+
+/* ============================================
+   TRAVEL SCREEN BACKGROUND
+   NYC at night, city lights
+   ============================================ */
+.bg-travel {
+  background: 
+    /* Distant city glow */
+    radial-gradient(ellipse 120% 40% at 50% 100%, 
+      rgba(255, 200, 150, 0.1) 0%, 
+      rgba(200, 150, 100, 0.05) 30%,
+      transparent 60%
+    ),
+    /* Stars/lights */
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 200, 0.3) 0%, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 200, 0.25) 0%, transparent 1px),
+    radial-gradient(circle at 60% 40%, rgba(255, 255, 200, 0.2) 0%, transparent 1px),
+    radial-gradient(circle at 35% 15%, rgba(255, 255, 200, 0.3) 0%, transparent 1px),
+    radial-gradient(circle at 90% 35%, rgba(255, 255, 200, 0.25) 0%, transparent 1px),
+    /* Night sky */
+    linear-gradient(180deg, 
+      #08080c 0%, 
+      #0c0c12 30%,
+      #101018 60%,
+      #141420 100%
+    );
+}
+
+/* ============================================
+   ACCUSATION SCREEN BACKGROUND
+   Dramatic, tense, red accent
+   ============================================ */
+.bg-accusation {
+  background: 
+    /* Dramatic red spotlight */
+    radial-gradient(ellipse 50% 50% at 50% 50%, 
+      rgba(180, 50, 50, 0.12) 0%, 
+      rgba(150, 40, 40, 0.06) 40%,
+      transparent 60%
+    ),
+    /* Tension vignette */
+    radial-gradient(ellipse 100% 100% at 50% 50%, 
+      transparent 30%,
+      rgba(0, 0, 0, 0.3) 80%
+    ),
+    /* Intense shadows */
+    linear-gradient(180deg, 
+      #0d0808 0%, 
+      #1a0f0f 50%,
+      #100808 100%
+    );
+}
+
+/* ============================================
+   ENDING SCREEN BACKGROUNDS
+   ============================================ */
+.bg-ending-good {
+  background: 
+    /* Dawn light breaking */
+    linear-gradient(135deg, 
+      rgba(255, 200, 150, 0.15) 0%, 
+      rgba(200, 180, 160, 0.08) 40%,
+      transparent 70%
+    ),
+    /* Hope */
+    radial-gradient(ellipse 80% 60% at 30% 80%, 
+      rgba(212, 165, 116, 0.1) 0%, 
+      transparent 50%
+    ),
+    linear-gradient(180deg, 
+      #2a2520 0%, 
+      #352d25 100%
+    );
+}
+
+.bg-ending-bad {
+  background: 
+    /* Cold, empty */
+    radial-gradient(ellipse 100% 100% at 50% 50%, 
+      rgba(50, 60, 80, 0.1) 0%, 
+      transparent 50%
+    ),
+    linear-gradient(180deg, 
+      #0a0a0c 0%, 
+      #151518 100%
+    );
+}
+
+/* ============================================
+   SVG ILLUSTRATED BACKGROUNDS
+   ============================================ */
+.location-illustration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.location-illustration svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Neon sign animations for Birdland */
+.neon-text {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+.neon-accent {
+  animation: neonPulse 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes neonPulse {
+  0%, 100% { 
+    opacity: 1;
+    filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor);
+  }
+  50% { 
+    opacity: 0.85;
+    filter: drop-shadow(0 0 3px currentColor) drop-shadow(0 0 6px currentColor);
+  }
+}
+
+/* Smoke wisp animations for Ember Room */
+.smoke-wisp-1 {
+  animation: smokeWisp1 25s ease-in-out infinite;
+}
+
+.smoke-wisp-2 {
+  animation: smokeWisp2 30s ease-in-out infinite 5s;
+}
+
+.smoke-wisp-3 {
+  animation: smokeWisp3 28s ease-in-out infinite 10s;
+}
+
+@keyframes smokeWisp1 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.04;
+  }
+  25% { 
+    transform: translate(50px, -30px) scale(1.1);
+    opacity: 0.06;
+  }
+  50% { 
+    transform: translate(80px, -60px) scale(1.2);
+    opacity: 0.03;
+  }
+  75% { 
+    transform: translate(30px, -40px) scale(1.05);
+    opacity: 0.05;
+  }
+}
+
+@keyframes smokeWisp2 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.04;
+  }
+  33% { 
+    transform: translate(-40px, -50px) scale(1.15);
+    opacity: 0.05;
+  }
+  66% { 
+    transform: translate(-20px, -80px) scale(1.1);
+    opacity: 0.03;
+  }
+}
+
+@keyframes smokeWisp3 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.04;
+  }
+  50% { 
+    transform: translate(60px, -70px) scale(1.2);
+    opacity: 0.05;
+  }
+}
+
+/* Hanging lights subtle sway */
+.hanging-lights {
+  animation: lightSway 8s ease-in-out infinite;
+  transform-origin: center top;
+}
+
+@keyframes lightSway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(0.5deg); }
+  75% { transform: rotate(-0.5deg); }
+}
+
+/* Responsive adjustments for illustrated backgrounds */
+@media (max-width: 768px) {
+  .location-illustration svg {
+    opacity: 0.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-text,
+  .neon-accent,
+  .smoke-wisp-1,
+  .smoke-wisp-2,
+  .smoke-wisp-3,
+  .hanging-lights {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   ENHANCED VIGNETTE OVERLAY
+   ============================================ */
+.enhanced-vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 100;
+  background: radial-gradient(ellipse at center, 
+    transparent 35%, 
+    rgba(0, 0, 0, 0.2) 70%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+/* ============================================
+   CONTENT READABILITY
+   Semi-transparent backdrop for text
+   ============================================ */
+.content-panel {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  border-radius: 4px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.content-panel-light {
+  background: rgba(255, 250, 245, 0.08);
+  backdrop-filter: blur(2px);
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+/* ============================================
+   RESPONSIVE & ACCESSIBILITY
+   ============================================ */
+@media (max-width: 768px) {
+  .location-bg::after {
+    opacity: 0.03;
+  }
+  
+  .bg-ember-room::before,
+  .bg-van-gelder-studio::before,
+  .bg-earl-apartment::before,
+  .bg-birdland::before {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .location-bg::after,
+  .bg-ember-room::before,
+  .bg-van-gelder-studio::before,
+  .bg-earl-apartment::before,
+  .bg-lorraine-brownstone::before,
+  .bg-birdland::before,
+  .spotlight-flicker {
+    animation: none !important;
+  }
+}
+
+
+/* ===========================================
+   ORIGINAL STYLES (PRESERVED)
+   =========================================== */
+
+/* Noir vignette effect */
+.vignette {
+  position: relative;
+}
+.vignette::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 26, 26, 0.15) 100%);
+}
+
+/* Subtle paper texture */
+.paper-texture {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-blend-mode: soft-light;
+  background-size: 200px 200px;
+}
+
+/* Flickering light effect for atmosphere */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+.flicker {
+  animation: flicker 8s infinite;
+}
+
+/* Slow pulse for emphasis */
+@keyframes slowPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.slow-pulse {
+  animation: slowPulse 4s ease-in-out infinite;
+}
+
+/* Typewriter cursor */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor::after {
+  content: '▌';
+  animation: blink 1s infinite;
+  color: currentColor;
+  margin-left: 2px;
+}
+
+/* Smoke drift effect */
+@keyframes drift {
+  0% { transform: translateY(0) translateX(0); opacity: 0.03; }
+  50% { transform: translateY(-20px) translateX(10px); opacity: 0.06; }
+  100% { transform: translateY(-40px) translateX(-5px); opacity: 0.03; }
+}
+
+.smoke {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(26, 26, 26, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: drift 15s ease-in-out infinite;
+}
+
+/* Choice hover effect - doubled padding for larger fonts */
+.choice-btn {
+  @apply block w-full text-left px-8 py-8 border-2 transition-all duration-300;
+  border-color: rgba(255, 250, 245, 0.25);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.choice-btn:hover {
+  border-color: rgba(255, 250, 245, 0.4);
+  background: rgba(0, 0, 0, 0.65);
+  padding-left: 2.5rem;
+  border-left-width: 6px;
+  border-left-color: theme('colors.jazz-amber');
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Scene transition */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.scene-enter {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Ambient bar for location mood */
+.mood-bar {
+  height: 6px;
+  background: linear-gradient(90deg, 
+    theme('colors.jazz-amber') 0%, 
+    theme('colors.jazz-blue') 50%, 
+    theme('colors.jazz-black') 100%
+  );
+  opacity: 0.6;
+}
+
+/* Character Portrait Styles */
+.character-portrait {
+  transition: all 0.3s ease;
+}
+
+.character-portrait:hover {
+  transform: scale(1.02);
+}
+
+.portrait-svg {
+  display: block;
+}
+
+/* Portrait hover glow effect */
+.choice-btn:hover .character-portrait {
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 
+              0 0 30px rgba(212, 165, 116, 0.25),
+              inset 0 0 20px rgba(212, 165, 116, 0.1) !important;
+}
+
+/* Suspect portrait indicator */
+.choice-btn:hover .character-portrait[data-suspect="true"] {
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 
+              0 0 30px rgba(212, 165, 116, 0.4),
+              inset 0 0 20px rgba(212, 165, 116, 0.15) !important;
+}
+
+/* Portrait film grain overlay */
+.character-portrait::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23grain)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Portrait subtle animation on dialogue screen */
+@keyframes portraitBreathe {
+  0%, 100% { 
+    filter: brightness(1) contrast(1);
+  }
+  50% { 
+    filter: brightness(1.02) contrast(1.01);
+  }
+}
+
+.portrait-glow {
+  animation: portraitBreathe 4s ease-in-out infinite;
+}
+
+/* Dark mode portrait enhancement */
+@media (prefers-color-scheme: dark) {
+  .character-portrait {
+    filter: contrast(1.1) brightness(0.95);
+  }
+}
+
+/* ===========================================
+   LIGHT TEXT FOR DARK BACKGROUNDS
+   High contrast for readability
+   =========================================== */
+.text-light {
+  color: #FFF8F0;
+  text-shadow: 1px 1px 0 #000, 2px 2px 0 rgba(0,0,0,0.4);
+}
+
+.text-light-muted {
+  color: rgba(255, 250, 245, 0.9);
+  text-shadow: 1px 1px 0 #000, 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.text-light-subtle {
+  color: rgba(255, 250, 245, 0.75);
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+}
+
+/* ===========================================
+   TITLE SCREEN DRAMATIC ANIMATIONS
+   Noir opening sequence
+   =========================================== */
+
+.title-screen-illustration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Title text - crisp noir poster style */
+.title-glow {
+  text-shadow: 
+    2px 2px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    3px 3px 0 rgba(0,0,0,0.5);
+}
+
+.title-glow-amber {
+  text-shadow: 
+    2px 2px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    3px 3px 0 rgba(0,0,0,0.5);
+}
+
+/* Twinkling window animations */
+.twinkle-window {
+  animation: windowTwinkle 8s ease-in-out infinite;
+}
+
+.twinkle-delay-0 { animation-delay: 0s; }
+.twinkle-delay-1 { animation-delay: 0.7s; }
+.twinkle-delay-2 { animation-delay: 1.4s; }
+.twinkle-delay-3 { animation-delay: 2.1s; }
+.twinkle-delay-4 { animation-delay: 2.8s; }
+.twinkle-delay-5 { animation-delay: 3.5s; }
+.twinkle-delay-6 { animation-delay: 4.2s; }
+.twinkle-delay-7 { animation-delay: 4.9s; }
+.twinkle-delay-8 { animation-delay: 5.6s; }
+.twinkle-delay-9 { animation-delay: 6.3s; }
+.twinkle-delay-10 { animation-delay: 7s; }
+.twinkle-delay-11 { animation-delay: 7.7s; }
+
+@keyframes windowTwinkle {
+  0%, 100% { opacity: var(--base-opacity, 0.3); }
+  30% { opacity: calc(var(--base-opacity, 0.3) * 1.3); }
+  50% { opacity: calc(var(--base-opacity, 0.3) * 0.6); }
+  70% { opacity: calc(var(--base-opacity, 0.3) * 1.1); }
+  85% { opacity: calc(var(--base-opacity, 0.3) * 0.4); }
+}
+
+/* Star twinkling */
+.star-twinkle {
+  animation: starTwinkle 5s ease-in-out infinite;
+}
+
+.star-delay-0 { animation-delay: 0s; }
+.star-delay-1 { animation-delay: 0.8s; }
+.star-delay-2 { animation-delay: 1.6s; }
+.star-delay-3 { animation-delay: 2.4s; }
+.star-delay-4 { animation-delay: 3.2s; }
+.star-delay-5 { animation-delay: 4s; }
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+/* Window flicker */
+.window-flicker {
+  animation: windowFlicker 6s ease-in-out infinite;
+}
+
+.window-flicker-delay {
+  animation: windowFlicker 6s ease-in-out infinite 3s;
+}
+
+@keyframes windowFlicker {
+  0%, 100% { opacity: 0.5; }
+  20% { opacity: 0.55; }
+  40% { opacity: 0.45; }
+  60% { opacity: 0.52; }
+  80% { opacity: 0.48; }
+}
+
+/* Neon glow pulsing */
+.neon-glow-pulse {
+  animation: neonGlowPulse 4s ease-in-out infinite;
+}
+
+.neon-glow-pulse-delay {
+  animation: neonGlowPulse 4s ease-in-out infinite 2s;
+}
+
+@keyframes neonGlowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Neon text flicker */
+.neon-flicker-text {
+  animation: neonTextFlicker 8s ease-in-out infinite;
+}
+
+.neon-flicker-text-delay {
+  animation: neonTextFlicker 8s ease-in-out infinite 4s;
+}
+
+@keyframes neonTextFlicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.4; }
+  94% { opacity: 1; }
+  95% { opacity: 0.7; }
+  96% { opacity: 0.3; }
+  97% { opacity: 1; }
+}
+
+/* Street reflection pulse */
+.reflection-pulse {
+  animation: reflectionPulse 6s ease-in-out infinite;
+}
+
+.reflection-pulse-delay {
+  animation: reflectionPulse 6s ease-in-out infinite 3s;
+}
+
+@keyframes reflectionPulse {
+  0%, 100% { opacity: 0.2; transform: scaleX(1); }
+  50% { opacity: 0.3; transform: scaleX(1.05); }
+}
+
+/* Street lamp glow flicker */
+.lamp-glow-flicker {
+  animation: lampGlowFlicker 5s ease-in-out infinite;
+}
+
+.lamp-glow-flicker-delay {
+  animation: lampGlowFlicker 5s ease-in-out infinite 2.5s;
+}
+
+@keyframes lampGlowFlicker {
+  0%, 100% { opacity: 1; }
+  10% { opacity: 0.95; }
+  20% { opacity: 1; }
+  30% { opacity: 0.9; }
+  40% { opacity: 1; }
+  90% { opacity: 1; }
+  91% { opacity: 0.6; }
+  92% { opacity: 1; }
+}
+
+/* Cigarette glow pulse */
+.cigarette-pulse {
+  animation: cigarettePulse 3s ease-in-out infinite;
+}
+
+@keyframes cigarettePulse {
+  0%, 100% { opacity: 0.8; r: 4; }
+  30% { opacity: 1; r: 5; }
+  60% { opacity: 0.6; r: 3; }
+}
+
+/* Smoke rising */
+.smoke-rise {
+  animation: smokeRise 8s ease-out infinite;
+}
+
+.smoke-rise-delay {
+  animation: smokeRise 8s ease-out infinite 4s;
+}
+
+@keyframes smokeRise {
+  0% { 
+    opacity: 0.15; 
+    transform: translateY(0) translateX(0);
+  }
+  50% { 
+    opacity: 0.08; 
+    transform: translateY(-40px) translateX(10px);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-80px) translateX(20px);
+  }
+}
+
+/* Rain falling animation */
+.raindrop-fall {
+  animation: raindropFall linear infinite;
+}
+
+@keyframes raindropFall {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--opacity, 0.2);
+  }
+  90% {
+    opacity: var(--opacity, 0.2);
+  }
+  100% {
+    transform: translateY(1200px);
+    opacity: 0;
+  }
+}
+
+/* Fog drift */
+.fog-drift {
+  animation: fogDrift 30s ease-in-out infinite;
+}
+
+.fog-drift-delay {
+  animation: fogDrift 30s ease-in-out infinite 15s;
+}
+
+@keyframes fogDrift {
+  0%, 100% { 
+    transform: translateX(0) scaleX(1);
+    opacity: 0.3;
+  }
+  25% { 
+    transform: translateX(50px) scaleX(1.1);
+    opacity: 0.35;
+  }
+  50% { 
+    transform: translateX(-30px) scaleX(0.95);
+    opacity: 0.25;
+  }
+  75% { 
+    transform: translateX(20px) scaleX(1.05);
+    opacity: 0.32;
+  }
+}
+
+/* Film grain overlay animation */
+.grain-overlay {
+  animation: grainOverlay 0.3s steps(1) infinite;
+}
+
+@keyframes grainOverlay {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  75% { transform: translate(-1px, -1px); }
+}
+
+/* Transition duration utilities */
+.duration-2000 {
+  transition-duration: 2000ms;
+}
+
+.duration-1500 {
+  transition-duration: 1500ms;
+}
+
+/* Reduced motion support for title screen */
+@media (prefers-reduced-motion: reduce) {
+  .twinkle-window,
+  .star-twinkle,
+  .window-flicker,
+  .window-flicker-delay,
+  .neon-glow-pulse,
+  .neon-glow-pulse-delay,
+  .neon-flicker-text,
+  .neon-flicker-text-delay,
+  .reflection-pulse,
+  .reflection-pulse-delay,
+  .lamp-glow-flicker,
+  .lamp-glow-flicker-delay,
+  .cigarette-pulse,
+  .smoke-rise,
+  .smoke-rise-delay,
+  .raindrop-fall,
+  .fog-drift,
+  .fog-drift-delay,
+  .grain-overlay {
+    animation: none !important;
+  }
+  
+  .raindrop-fall {
+    display: none;
+  }
+}
+
+/* ===========================================
+   TIMELINE: SMOKY JAZZ CLUB TABLE
+   =========================================== */
+
+/* Wood table texture background */
+.table-surface {
+  background: 
+    /* Wood grain overlay */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    ),
+    /* Main wood gradient */
+    linear-gradient(
+      180deg,
+      #2a1f1a 0%,
+      #3d2b22 20%,
+      #4a3328 40%,
+      #3d2b22 60%,
+      #2a1f1a 100%
+    );
+  background-color: #2a1f1a;
+  position: relative;
+}
+
+/* Scratches and wear on table */
+.table-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    /* Subtle scratches */
+    linear-gradient(73deg, transparent 30%, rgba(255,255,255,0.02) 30.5%, transparent 31%),
+    linear-gradient(107deg, transparent 60%, rgba(0,0,0,0.05) 60.5%, transparent 61%),
+    linear-gradient(163deg, transparent 45%, rgba(255,255,255,0.015) 45.5%, transparent 46%);
+  pointer-events: none;
+}
+
+/* Spotlight vignette - light in center, dark edges */
+.table-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    transparent 0%,
+    rgba(0,0,0,0.2) 50%,
+    rgba(0,0,0,0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Warm overhead light glow */
+.table-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 50% 40% at 50% 30%,
+    rgba(255, 200, 120, 0.08) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Table edge shadow (depth) */
+.table-edge-shadow {
+  box-shadow: 
+    inset 0 4px 20px rgba(0,0,0,0.5),
+    inset 0 -4px 20px rgba(0,0,0,0.3),
+    inset 4px 0 20px rgba(0,0,0,0.3),
+    inset -4px 0 20px rgba(0,0,0,0.3);
+}
+
+/* Smoke particle container */
+.smoke-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Individual smoke wisp */
+.smoke-wisp {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(200, 200, 200, 0.15) 0%,
+    rgba(200, 200, 200, 0.05) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(8px);
+  animation: smokeFloat 20s ease-in-out infinite;
+}
+
+.smoke-wisp:nth-child(1) {
+  left: 10%;
+  top: 60%;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.smoke-wisp:nth-child(2) {
+  left: 70%;
+  top: 40%;
+  animation-delay: -5s;
+  animation-duration: 22s;
+  width: 80px;
+  height: 80px;
+}
+
+.smoke-wisp:nth-child(3) {
+  left: 40%;
+  top: 70%;
+  animation-delay: -10s;
+  animation-duration: 25s;
+  width: 120px;
+  height: 120px;
+}
+
+@keyframes smokeFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(30px, -20px) scale(1.1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(-20px, -40px) scale(0.9);
+    opacity: 0.2;
+  }
+  75% {
+    transform: translate(10px, -10px) scale(1.05);
+    opacity: 0.35;
+  }
+}
+
+/* Rising smoke from ashtray */
+.smoke-rising {
+  position: absolute;
+  width: 30px;
+  height: 80px;
+  background: linear-gradient(
+    to top,
+    rgba(180, 180, 180, 0.3) 0%,
+    rgba(180, 180, 180, 0.1) 50%,
+    transparent 100%
+  );
+  filter: blur(4px);
+  animation: smokeRise 4s ease-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateY(0) scaleX(1) scaleY(0.3);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-30px) scaleX(1.5) scaleY(1) rotate(5deg);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-60px) scaleX(2) scaleY(1.2) rotate(-5deg);
+    opacity: 0;
+  }
+}
+
+/* Chalked/scratched timeline line */
+.chalk-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.4) 2%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0.4) 98%,
+    transparent 100%
+  );
+  height: 2px;
+  position: relative;
+}
+
+.chalk-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(0,0,0,0.3) 3px,
+    rgba(0,0,0,0.3) 4px
+  );
+}
+
+/* Brass/vintage time markers */
+.time-marker-brass {
+  color: #d4a84b;
+  text-shadow: 
+    0 1px 2px rgba(0,0,0,0.8),
+    0 0 10px rgba(212, 168, 75, 0.3);
+  font-family: 'Georgia', serif;
+  font-weight: bold;
+}
+
+/* Murder marker - blood/wax drop */
+.murder-marker {
+  background: radial-gradient(
+    ellipse at 30% 30%,
+    #c41e1e 0%,
+    #8b0000 60%,
+    #5c0000 100%
+  );
+  box-shadow: 
+    0 2px 4px rgba(0,0,0,0.5),
+    0 0 15px rgba(196, 30, 30, 0.4),
+    inset 0 -2px 4px rgba(0,0,0,0.3);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+
+/* Typewriter label style */
+.typewriter-label {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+  color: #e8e0d5;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  background: rgba(60, 45, 35, 0.8);
+  padding: 4px 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Evidence card base - physical object feel */
+.evidence-card {
+  background: #f5f0e6;
+  border-radius: 2px;
+  box-shadow: 
+    2px 3px 8px rgba(0,0,0,0.4),
+    0 1px 2px rgba(0,0,0,0.2);
+  transform: rotate(var(--rotation, 0deg));
+  transition: all 0.2s ease;
+}
+
+.evidence-card:hover {
+  transform: rotate(var(--rotation, 0deg)) translateY(-4px) scale(1.02);
+  box-shadow: 
+    4px 6px 16px rgba(0,0,0,0.5),
+    0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Polaroid style card */
+.polaroid-card {
+  background: #fefefe;
+  padding: 8px 8px 30px 8px;
+  border-radius: 1px;
+  box-shadow: 
+    2px 3px 10px rgba(0,0,0,0.4),
+    0 0 1px rgba(0,0,0,0.2);
+}
+
+.polaroid-card .photo-area {
+  background: #1a1a1a;
+  aspect-ratio: 1;
+  margin-bottom: 8px;
+}
+
+.polaroid-card .caption {
+  font-family: 'Caveat', cursive, 'Comic Sans MS', sans-serif;
+  color: #333;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Newspaper clipping style */
+.newspaper-clipping {
+  background: #f4ecd8;
+  padding: 8px;
+  border: none;
+  position: relative;
+  box-shadow: 
+    2px 3px 8px rgba(0,0,0,0.3);
+}
+
+.newspaper-clipping::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 1px,
+      rgba(0,0,0,0.02) 1px,
+      rgba(0,0,0,0.02) 2px
+    );
+  pointer-events: none;
+}
+
+/* Torn paper edge effect */
+.torn-edge-top {
+  clip-path: polygon(
+    0% 3%, 5% 0%, 10% 2%, 15% 0%, 20% 3%, 25% 1%, 30% 2%, 35% 0%, 
+    40% 2%, 45% 0%, 50% 3%, 55% 1%, 60% 2%, 65% 0%, 70% 3%, 75% 1%, 
+    80% 2%, 85% 0%, 90% 2%, 95% 0%, 100% 2%,
+    100% 100%, 0% 100%
+  );
+}
+
+/* Handwritten note style */
+.handwritten-note {
+  background: 
+    repeating-linear-gradient(
+      #f9f5eb 0px,
+      #f9f5eb 24px,
+      #ccc 24px,
+      #ccc 25px
+    );
+  background-color: #f9f5eb;
+  padding: 12px;
+  font-family: 'Caveat', cursive, 'Comic Sans MS', sans-serif;
+  color: #2c3e50;
+  line-height: 25px;
+}
+
+/* Red stamp effect */
+.stamp-inconsistent {
+  position: relative;
+}
+
+.stamp-inconsistent::after {
+  content: 'INCONSISTENT';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  font-family: 'Impact', sans-serif;
+  font-size: 0.7rem;
+  color: rgba(180, 0, 0, 0.7);
+  border: 2px solid rgba(180, 0, 0, 0.7);
+  padding: 2px 6px;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+/* Whiskey glass decorative element */
+.whiskey-glass {
+  width: 50px;
+  height: 60px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.1) 0%,
+    transparent 50%
+  ),
+  linear-gradient(
+    to bottom,
+    transparent 40%,
+    rgba(180, 120, 40, 0.6) 40%,
+    rgba(160, 100, 30, 0.7) 100%
+  );
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 2px 2px 4px 4px;
+  box-shadow: 
+    0 4px 8px rgba(0,0,0,0.3),
+    inset 0 0 20px rgba(180, 120, 40, 0.2);
+  position: relative;
+}
+
+.whiskey-glass::after {
+  content: '';
+  position: absolute;
+  top: 45%;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+}
+
+/* Ashtray */
+.ashtray {
+  width: 70px;
+  height: 25px;
+  background: linear-gradient(
+    to bottom,
+    #4a4a4a 0%,
+    #2a2a2a 100%
+  );
+  border-radius: 50%;
+  box-shadow: 
+    0 3px 6px rgba(0,0,0,0.4),
+    inset 0 2px 4px rgba(0,0,0,0.5),
+    inset 0 -1px 2px rgba(255,255,255,0.1);
+  position: relative;
+}
+
+.ashtray::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 15%;
+  width: 70%;
+  height: 60%;
+  background: #1a1a1a;
+  border-radius: 50%;
+}
+
+/* Cigarette */
+.cigarette {
+  width: 60px;
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    #ff6b35 0%,
+    #ff6b35 5%,
+    #888 5%,
+    #888 8%,
+    #f5f5f0 8%,
+    #f5f5f0 75%,
+    #d4a574 75%,
+    #c49464 100%
+  );
+  border-radius: 3px;
+  transform: rotate(-10deg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Pen/pencil */
+.pencil {
+  width: 80px;
+  height: 8px;
+  background: linear-gradient(
+    to right,
+    #2a2a2a 0%,
+    #2a2a2a 8%,
+    #f4d03f 8%,
+    #f4d03f 90%,
+    #c9a227 90%,
+    #8b7355 95%,
+    #2a2a2a 95%
+  );
+  border-radius: 1px 4px 4px 1px;
+  transform: rotate(5deg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* ===========================================
+   BUTTON MICRO-INTERACTIONS
+   Tactile feedback, press states, polish
+   =========================================== */
+
+/* Base noir button - used for primary actions */
+.btn-noir {
+  @apply relative overflow-hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+  box-shadow: 
+    0 4px 0 rgba(0,0,0,0.4),
+    0 6px 12px rgba(0,0,0,0.3);
+}
+
+.btn-noir:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 rgba(0,0,0,0.4),
+    0 10px 20px rgba(0,0,0,0.4);
+}
+
+.btn-noir:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 2px 0 rgba(0,0,0,0.4),
+    0 3px 6px rgba(0,0,0,0.3);
+  transition-duration: 0.05s;
+}
+
+/* Amber accent button */
+.btn-amber {
+  @apply relative overflow-hidden bg-jazz-amber text-jazz-black font-display tracking-wide;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+  box-shadow: 
+    0 4px 0 rgba(160, 120, 60, 0.8),
+    0 6px 12px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-amber:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 
+    0 6px 0 rgba(160, 120, 60, 0.8),
+    0 10px 20px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.btn-amber:active {
+  transform: translateY(2px);
+  filter: brightness(0.95);
+  box-shadow: 
+    0 2px 0 rgba(160, 120, 60, 0.8),
+    0 3px 6px rgba(0,0,0,0.3),
+    inset 0 2px 4px rgba(0,0,0,0.1);
+  transition-duration: 0.05s;
+}
+
+/* Blue accent button */
+.btn-blue {
+  @apply relative overflow-hidden bg-jazz-blue text-jazz-cream font-display tracking-wide;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+  box-shadow: 
+    0 4px 0 rgba(40, 60, 100, 0.8),
+    0 6px 12px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.btn-blue:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+  box-shadow: 
+    0 6px 0 rgba(40, 60, 100, 0.8),
+    0 10px 20px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.btn-blue:active {
+  transform: translateY(2px);
+  filter: brightness(0.9);
+  box-shadow: 
+    0 2px 0 rgba(40, 60, 100, 0.8),
+    0 3px 6px rgba(0,0,0,0.3),
+    inset 0 2px 4px rgba(0,0,0,0.2);
+  transition-duration: 0.05s;
+}
+
+/* Ghost/outline button */
+.btn-ghost {
+  @apply relative overflow-hidden border-2 border-white/30 bg-transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+.btn-ghost:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-ghost:active {
+  transform: translateY(1px);
+  border-color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.08);
+  transition-duration: 0.05s;
+}
+
+/* Button shine effect on hover */
+.btn-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.15) 50%,
+    transparent 100%
+  );
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.btn-shine:hover::before {
+  left: 100%;
+}
+
+/* Button ripple effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-ripple:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  transition: width 0s, height 0s, opacity 0.4s ease;
+}
+
+/* Choice button enhanced - builds on existing .choice-btn */
+.choice-btn-enhanced {
+  @apply block w-full text-left px-8 py-8 border-2 transition-all;
+  border-color: rgba(255, 250, 245, 0.25);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+  transform: translateX(0);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.choice-btn-enhanced:hover {
+  border-color: rgba(255, 250, 245, 0.4);
+  background: rgba(0, 0, 0, 0.65);
+  padding-left: 2.5rem;
+  border-left-width: 6px;
+  border-left-color: theme('colors.jazz-amber');
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(212, 165, 116, 0.1),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transform: translateX(4px);
+}
+
+.choice-btn-enhanced:active {
+  background: rgba(0, 0, 0, 0.75);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(0,0,0,0.2);
+  transform: translateX(2px);
+  transition-duration: 0.05s;
+}
+
+/* Icon bounce on button hover */
+.btn-icon-bounce:hover .btn-icon {
+  animation: iconBounce 0.4s ease;
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-3px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-2px); }
+}
+
+/* Scale pulse for important buttons */
+.btn-pulse-attention {
+  animation: pulseAttention 2s ease-in-out infinite;
+}
+
+@keyframes pulseAttention {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      0 4px 0 rgba(0,0,0,0.4),
+      0 6px 12px rgba(0,0,0,0.3);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 
+      0 4px 0 rgba(0,0,0,0.4),
+      0 8px 20px rgba(0,0,0,0.4),
+      0 0 20px rgba(212, 165, 116, 0.2);
+  }
+}
+
+/* Disabled button state */
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+  pointer-events: none;
+}
+
+/* Loading state */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpin 0.6s linear infinite;
+}
+
+@keyframes btnSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Touch-friendly tap feedback for mobile */
+@media (hover: none) {
+  .btn-noir:active,
+  .btn-amber:active,
+  .btn-blue:active,
+  .btn-ghost:active,
+  .choice-btn-enhanced:active {
+    transform: scale(0.98);
+  }
+  
+  /* Disable hover animations on touch */
+  .btn-shine::before {
+    display: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .btn-noir,
+  .btn-amber,
+  .btn-blue,
+  .btn-ghost,
+  .choice-btn-enhanced {
+    transition: none !important;
+  }
+  
+  .btn-pulse-attention {
+    animation: none !important;
+  }
+  
+  .btn-shine::before {
+    display: none;
+  }
+}
