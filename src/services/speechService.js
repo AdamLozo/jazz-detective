@@ -1,6 +1,8 @@
 // Web Speech API Text-to-Speech Service
 // Free, built into all modern browsers
 
+import { normalizeCharacterId, speakerToCharacterId } from '../utils/characterUtils';
+
 // Voice profiles for each character
 // pitch: 0.1-2 (1 = normal), rate: 0.1-10 (1 = normal)
 export const VOICE_PROFILES = {
@@ -340,13 +342,9 @@ function selectVoice(profile) {
  */
 export function getVoiceProfile(characterId) {
   if (!characterId) return VOICE_PROFILES.default;
-  
-  // Normalize the ID
-  const normalizedId = characterId
-    .toLowerCase()
-    .replace(/[-_\s]+/g, '')
-    .replace(/['"]/g, '');
-  
+
+  const normalizedId = normalizeCharacterId(characterId);
+
   return VOICE_PROFILES[normalizedId] || VOICE_PROFILES.default;
 }
 
@@ -419,32 +417,9 @@ export function isSpeaking() {
   return window.speechSynthesis.speaking;
 }
 
-/**
- * Extract character ID from speaker name in dialogue
- * @param {string} speakerName - The speaker name from dialogue
- * @returns {string} - Normalized character ID
- */
-export function speakerToCharacterId(speakerName) {
-  if (!speakerName) return 'narrator';
-  
-  const name = speakerName.toLowerCase();
-  
-  if (name.includes('teddy')) return 'teddy';
-  if (name.includes('jimmy')) return 'jimmy';
-  if (name.includes('delia')) return 'delia';
-  if (name.includes('rudy')) return 'rudy';
-  if (name.includes('snap') || name.includes('marcus')) return 'snap';
-  if (name.includes('frank')) return 'frank';
-  if (name.includes('patterson')) return 'mrspatterson';
-  if (name.includes('lorraine')) return 'lorraine';
-  if (name.includes('mae')) return 'mae';
-  if (name.includes('sid')) return 'symphonysid';
-  if (name.includes('pete') || name.includes('wilson')) return 'journalist';
-  if (name.includes('ruthie')) return 'ruthie';
-  if (name.includes('chet') || name.includes('chester')) return 'chet';
-  
-  return 'narrator';
-}
+// speakerToCharacterId is imported from '../utils/characterUtils'
+// Re-export for backwards compatibility
+export { speakerToCharacterId };
 
 /**
  * Get list of available voices (for debugging/settings)

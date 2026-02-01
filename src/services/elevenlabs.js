@@ -1,51 +1,53 @@
 // ElevenLabs Text-to-Speech Service
 // API Documentation: https://elevenlabs.io/docs/api-reference
 
+import { normalizeCharacterId, speakerToCharacterId } from '../utils/characterUtils';
+
 const API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 const BASE_URL = 'https://api.elevenlabs.io/v1';
 
-// Voice IDs for different character types
-// Browse voices at: https://elevenlabs.io/voice-library
+// Voice IDs - Custom voices from Adam's ElevenLabs account
+// Mapped from Wicked Smaht characters to Jazz Noir personalities
 export const VOICES = {
-  // Narrator - deep, smooth male voice for noir narration
-  narrator: 'pNInz6obpgDQGcFmaJgB', // Adam - deep male
-  
+  // Narrator - deep noir narration (sully: gravelly, authoritative)
+  narrator: 'NywA242qQXB7MIJrCoqS',
+
   // === THE EMBER ROOM ===
-  teddy: 'TxGEqnHWrfWFTfGW9XjX', // Josh - older male, sleazy
-  bartender: 'ErXwobaYiN019PkySvjV', // Antoni - young male
-  jimmy: 'ErXwobaYiN019PkySvjV', // Antoni - young male (same as bartender)
-  waitress: 'EXAVITQu4vr4xnSDxMaL', // Bella - young female, nervous
-  delia: 'EXAVITQu4vr4xnSDxMaL', // Bella - young female
-  
+  teddy: 'rLOxQ3Ng9cSsUw5PcOHf',      // miles: fake refined, fits sleazy club owner
+  bartender: 'QPnMNBEEOmsb7ezbv7f1',   // brendan: young, energetic
+  jimmy: 'QPnMNBEEOmsb7ezbv7f1',       // brendan: young male
+  waitress: '5h7yamR53TAavMtELWLe',    // colleen: sharp female
+  delia: '5h7yamR53TAavMtELWLe',       // colleen: sharp, no-nonsense
+
   // === VAN GELDER'S STUDIO ===
-  rudy: 'VR6AewLTigWG4xSOukaG', // Arnold - precise, technical
-  snap: 'SOYHLrjzK2X1ezoPC6cr', // Harry - expressive male, cocky
-  marcus: 'SOYHLrjzK2X1ezoPC6cr', // Harry - same as snap
-  
+  rudy: 'W31Vf96FFmtR0O1RDPKp',        // simon: academic, precise
+  snap: 'pooz8IrjkxHDBt14Xi8v',        // fitz: energetic, expressive
+  marcus: 'pooz8IrjkxHDBt14Xi8v',      // fitz: same as snap
+
   // === EARL'S APARTMENT ===
-  buildingSuper: 'ZQe5CZNOzWyzPSCn5a3c', // James - tired older male
-  frank: 'ZQe5CZNOzWyzPSCn5a3c', // James - same as super
-  neighbor: 'XB0fDUnXU5powFXDhCwa', // Charlotte - elderly female
-  mrsPetterson: 'XB0fDUnXU5powFXDhCwa', // Charlotte - same as neighbor
-  
+  buildingSuper: '0STyFUxfI6C3cJtqD8bn', // eddie: gruff, few words
+  frank: '0STyFUxfI6C3cJtqD8bn',       // eddie: gruff older male
+  neighbor: 'TgKgL4AAQZFIC8wypQ2l',    // mary_catherine: matriarch, 60s
+  mrsPetterson: 'TgKgL4AAQZFIC8wypQ2l', // mary_catherine: elderly female
+
   // === LORRAINE'S BROWNSTONE ===
-  lorraine: 'jsCqWAovK2LkecY7zXl4', // Freya - elegant female, heartbroken
-  mae: 'ThT5KcBeYPX3keUQqHPh', // Dorothy - sharp older female
-  
+  lorraine: 'eWtfC1JrnYxr8lIrjQt4',    // elena: mysterious, elegant
+  mae: 'iQwW0Wk6Yn8dGykrQVXU',         // trish: refined, sharp older female
+
   // === BIRDLAND ===
-  symphonySid: 'g5CIjZEefAph4nQFvHAz', // Ethan - radio voice
-  journalist: 'ErXwobaYiN019PkySvjV', // Antoni - young male
-  pete: 'ErXwobaYiN019PkySvjV', // Antoni - same as journalist
-  ruthie: 'jBpfuIE2acCO8z3wKNLl', // Gigi - soulful female, ambitious
-  chet: 'IKne3meq5aSn9XLyUdCD', // Charlie - raspy male, reformed
-  chester: 'IKne3meq5aSn9XLyUdCD', // Charlie - same as chet
-  
+  symphonySid: 'mXCULW79xNk7bZvGBPnL', // jerome: performer energy, radio voice
+  journalist: 'QjqXzCkVChvjEoE397Wj',  // danny: earnest, eager
+  pete: 'QjqXzCkVChvjEoE397Wj',        // danny: same as journalist
+  ruthie: 'vmaJr0jlXauKX3wB1cyW',      // maeve: professional, ambitious
+  chet: 'gPPSy02AZNNwzjeTEfx4',        // enzo: older male, weathered
+  chester: 'gPPSy02AZNNwzjeTEfx4',     // enzo: same as chet
+
   // === POLICE ===
-  morrison: 'VR6AewLTigWG4xSOukaG', // Arnold - authoritative cop
-  detective: 'VR6AewLTigWG4xSOukaG', // Arnold - same as morrison
-  
-  // Default fallback
-  default: 'pNInz6obpgDQGcFmaJgB'
+  morrison: 'MK8VT39pGxFCrNQTuylS',    // tommy: gruff 50s male, authoritative
+  detective: 'MK8VT39pGxFCrNQTuylS',   // tommy: same as morrison
+
+  // Default fallback (narrator voice)
+  default: 'NywA242qQXB7MIJrCoqS'
 };
 
 // Voice settings for different styles
@@ -120,12 +122,8 @@ export async function generateSpeechUrl(text, voiceId = VOICES.narrator, style =
  */
 export function getVoiceForCharacter(characterId) {
   if (!characterId) return VOICES.default;
-  
-  // Normalize the ID (handle various formats)
-  const normalizedId = characterId
-    .toLowerCase()
-    .replace(/[-_\s]+/g, '') // Remove separators
-    .replace(/['"]/g, ''); // Remove quotes
+
+  const normalizedId = normalizeCharacterId(characterId);
   
   // Direct mapping
   const directMappings = {
@@ -184,34 +182,9 @@ export function getVoiceForCharacter(characterId) {
   return directMappings[normalizedId] || VOICES.default;
 }
 
-/**
- * Extract character ID from speaker name in dialogue
- * @param {string} speakerName - The speaker name from dialogue
- * @returns {string} - Normalized character ID
- */
-export function speakerToCharacterId(speakerName) {
-  if (!speakerName) return 'narrator';
-  
-  const name = speakerName.toLowerCase();
-  
-  // Map speaker names to character IDs
-  if (name.includes('teddy')) return 'teddy';
-  if (name.includes('jimmy')) return 'jimmy';
-  if (name.includes('delia')) return 'delia';
-  if (name.includes('rudy')) return 'rudy';
-  if (name.includes('snap') || name.includes('marcus')) return 'snap';
-  if (name.includes('frank')) return 'frank';
-  if (name.includes('patterson') || name.includes('petterson')) return 'neighbor';
-  if (name.includes('lorraine')) return 'lorraine';
-  if (name.includes('mae')) return 'mae';
-  if (name.includes('sid')) return 'symphonySid';
-  if (name.includes('pete') || name.includes('wilson')) return 'journalist';
-  if (name.includes('ruthie')) return 'ruthie';
-  if (name.includes('chet') || name.includes('chester')) return 'chet';
-  if (name.includes('morrison')) return 'morrison';
-  
-  return 'narrator';
-}
+// speakerToCharacterId is imported from '../utils/characterUtils'
+// Re-export for backwards compatibility
+export { speakerToCharacterId };
 
 /**
  * Fetch available voices from ElevenLabs

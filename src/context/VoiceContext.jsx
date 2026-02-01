@@ -1,11 +1,10 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
-import { 
-  speak as speakText, 
-  stopSpeech, 
-  loadVoices, 
-  isSpeechSupported,
-  speakerToCharacterId 
-} from '../services/speechService';
+import {
+  generateSpeechUrl,
+  getVoiceForCharacter,
+  speakerToCharacterId,
+  checkApiStatus
+} from '../services/elevenlabs';
 
 const VoiceContext = createContext(null);
 
@@ -21,28 +20,26 @@ export function VoiceProvider({ children }) {
       return true;
     }
   });
-  
+
   const [isSupported, setIsSupported] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [voicesReady, setVoicesReady] = useState(false);
   const [error, setError] = useState(null);
-  
-  const currentUtteranceRef = useRef(null);
-  
-  // Check support and load voices on mount
+
+  const audioRef = useRef(null);
+  const currentUrlRef = useRef(null);
+
+  // Check ElevenLabs API status on mount
   useEffect(() => {
-    if (!isSpeechSupported()) {
-      setIsSupported(false);
-      setError('Speech synthesis not supported in this browser');
-      return;
-    }
-    
-    // Load voices
-    loadVoices().then(() => {
-      setVoicesReady(true);
+    checkApiStatus().then(status => {
+      if (!status.valid) {
+        console.warn('ElevenLabs API not configured:', status.error);
+        setIsSupported(false);
+        setError(status.error);
+      }
     });
   }, []);
-  
+
   // Save preference to localStorage
   useEffect(() => {
     try {
@@ -51,14 +48,23 @@ export function VoiceProvider({ children }) {
       // Ignore storage errors
     }
   }, [enabled]);
-  
-  // Stop current speech
+
+  // Stop current audio and cleanup
   const stop = useCallback(() => {
-    stopSpeech();
-    currentUtteranceRef.current = null;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+    // Revoke the object URL to free memory
+    if (currentUrlRef.current) {
+      URL.revokeObjectURL(currentUrlRef.current);
+      currentUrlRef.current = null;
+    }
     setIsPlaying(false);
+    setIsLoading(false);
   }, []);
-  
+
   // Toggle voice on/off
   const toggle = useCallback(() => {
     setEnabled(prev => {
@@ -68,68 +74,100 @@ export function VoiceProvider({ children }) {
       return !prev;
     });
   }, [stop]);
-  
-  // Speak text with character voice
-  const speak = useCallback((text, characterId = 'narrator', style = 'narration', onComplete = null) => {
-    // Stop any current speech
+
+  // Speak text with character voice using ElevenLabs
+  const speak = useCallback(async (text, characterId = 'narrator', style = 'narration', onComplete = null) => {
+    // Stop any current audio
     stop();
-    
+
     if (!enabled || !isSupported || !text || text.trim().length === 0) {
       if (onComplete) {
         setTimeout(onComplete, 100);
       }
       return;
     }
-    
+
     setError(null);
-    setIsPlaying(true);
-    
+    setIsLoading(true);
+
     // Handle character ID extraction from speaker names
-    const resolvedCharacterId = characterId.includes(' ') 
-      ? speakerToCharacterId(characterId) 
+    const resolvedCharacterId = characterId.includes(' ')
+      ? speakerToCharacterId(characterId)
       : characterId;
-    
-    currentUtteranceRef.current = speakText(
-      text,
-      resolvedCharacterId,
-      () => {
-        // onEnd
+
+    try {
+      // Get the voice ID for this character
+      const voiceId = getVoiceForCharacter(resolvedCharacterId);
+
+      // Generate audio from ElevenLabs
+      const audioUrl = await generateSpeechUrl(text, voiceId, style);
+      currentUrlRef.current = audioUrl;
+
+      // Create and play audio
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.oncanplaythrough = () => {
+        setIsLoading(false);
+        setIsPlaying(true);
+        audio.play().catch(err => {
+          console.error('Audio playback error:', err);
+          setError(err.message);
+          setIsPlaying(false);
+          if (onComplete) onComplete();
+        });
+      };
+
+      audio.onended = () => {
         setIsPlaying(false);
-        currentUtteranceRef.current = null;
+        // Cleanup
+        if (currentUrlRef.current) {
+          URL.revokeObjectURL(currentUrlRef.current);
+          currentUrlRef.current = null;
+        }
+        audioRef.current = null;
         if (onComplete) onComplete();
-      },
-      (err) => {
-        // onError
-        setError(err);
+      };
+
+      audio.onerror = (e) => {
+        console.error('Audio error:', e);
+        setError('Audio playback failed');
+        setIsLoading(false);
         setIsPlaying(false);
-        currentUtteranceRef.current = null;
         if (onComplete) onComplete();
-      }
-    );
+      };
+
+    } catch (err) {
+      console.error('ElevenLabs speech generation error:', err);
+      setError(err.message);
+      setIsLoading(false);
+      setIsPlaying(false);
+      if (onComplete) onComplete();
+    }
   }, [enabled, isSupported, stop]);
-  
-  // Preload is a no-op for Web Speech API (no network requests needed)
+
+  // Preload is a no-op for now (could implement caching later)
   const preload = useCallback(() => {
-    // Web Speech API doesn't need preloading
+    // Could implement preloading common phrases here
   }, []);
-  
-  // Clear cache is a no-op for Web Speech API
+
+  // Clear any cached audio
   const clearCache = useCallback(() => {
-    // No cache to clear
-  }, []);
-  
+    stop();
+  }, [stop]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       stop();
     };
   }, [stop]);
-  
+
   const value = {
     enabled,
     setEnabled,
     toggle,
-    isLoading: false, // Web Speech API doesn't have loading state
+    isLoading,
     isPlaying,
     error,
     speak,
@@ -137,9 +175,9 @@ export function VoiceProvider({ children }) {
     preload,
     clearCache,
     isSupported,
-    voicesReady,
+    voicesReady: isSupported, // ElevenLabs is always "ready" if API is configured
   };
-  
+
   return (
     <VoiceContext.Provider value={value}>
       {children}
