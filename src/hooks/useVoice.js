@@ -2,20 +2,17 @@
 // New code should import directly from '../context/VoiceContext'
 
 import { useVoiceContext } from '../context/VoiceContext';
-import { isSpeechSupported, getAvailableVoices } from '../services/speechService';
+import { checkApiStatus } from '../services/elevenlabs';
 
 /**
  * @deprecated Use useVoiceContext from '../context/VoiceContext' instead
  */
 export function useVoice() {
   const context = useVoiceContext();
-  
+
   return {
     ...context,
-    checkStatus: () => ({
-      valid: isSpeechSupported(),
-      voices: getAvailableVoices(),
-    }),
+    checkStatus: checkApiStatus,
   };
 }
 

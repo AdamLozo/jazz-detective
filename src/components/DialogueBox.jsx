@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useGame } from '../context/GameContext';
 import { useVoiceContext } from '../context/VoiceContext';
 import { dialogueTrees, getDialogueNode } from '../data/dialogue';
-import { speakerToCharacterId } from '../services/speechService';
+import { speakerToCharacterId } from '../services/elevenlabs';
 import CharacterPortrait from './CharacterPortrait';
 
 export default function DialogueBox({ character, onClose }) {
