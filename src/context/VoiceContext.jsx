@@ -5,6 +5,12 @@ import {
   speakerToCharacterId,
   checkApiStatus
 } from '../services/elevenlabs';
+import {
+  loadVoices as loadBrowserVoices,
+  speak as browserSpeak,
+  stopSpeech as stopBrowserSpeech,
+  isSpeechSupported as isBrowserSpeechSupported
+} from '../services/speechService';
 
 const VoiceContext = createContext(null);
 
@@ -21,24 +27,43 @@ export function VoiceProvider({ children }) {
     }
   });
 
-  const [isSupported, setIsSupported] = useState(true);
+  // Whether ElevenLabs is configured and usable. When it isn't, we fall back
+  // to the browser's built-in Web Speech API so voices still work.
+  const [useElevenLabs, setUseElevenLabs] = useState(false);
+  const browserSupported = isBrowserSpeechSupported();
+
+  // Voices are "supported" if EITHER backend can produce audio.
+  const [isSupported, setIsSupported] = useState(browserSupported);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState(null);
 
   const audioRef = useRef(null);
   const currentUrlRef = useRef(null);
+  const usingBrowserRef = useRef(false);
 
-  // Check ElevenLabs API status on mount
+  // Preload browser voices (some browsers load them asynchronously).
+  useEffect(() => {
+    if (browserSupported) {
+      loadBrowserVoices();
+    }
+  }, [browserSupported]);
+
+  // Check ElevenLabs API status on mount to decide which backend to use.
   useEffect(() => {
     checkApiStatus().then(status => {
-      if (!status.valid) {
-        console.warn('ElevenLabs API not configured:', status.error);
-        setIsSupported(false);
-        setError(status.error);
+      if (status.valid) {
+        setUseElevenLabs(true);
+        setIsSupported(true);
+      } else {
+        console.warn(
+          `ElevenLabs unavailable (${status.error}). Falling back to browser voices.`
+        );
+        setUseElevenLabs(false);
+        setIsSupported(browserSupported);
       }
     });
-  }, []);
+  }, [browserSupported]);
 
   // Save preference to localStorage
   useEffect(() => {
@@ -61,6 +86,11 @@ export function VoiceProvider({ children }) {
       URL.revokeObjectURL(currentUrlRef.current);
       currentUrlRef.current = null;
     }
+    // Cancel any browser speech in progress
+    if (usingBrowserRef.current) {
+      stopBrowserSpeech();
+      usingBrowserRef.current = false;
+    }
     setIsPlaying(false);
     setIsLoading(false);
   }, []);
@@ -75,7 +105,38 @@ export function VoiceProvider({ children }) {
     });
   }, [stop]);
 
-  // Speak text with character voice using ElevenLabs
+  // Speak using the browser's Web Speech API (free fallback).
+  const speakWithBrowser = useCallback((text, resolvedCharacterId, onComplete) => {
+    if (!browserSupported) {
+      setIsLoading(false);
+      if (onComplete) onComplete();
+      return;
+    }
+
+    usingBrowserRef.current = true;
+    setIsLoading(false);
+    setIsPlaying(true);
+
+    const finish = () => {
+      usingBrowserRef.current = false;
+      setIsPlaying(false);
+      if (onComplete) onComplete();
+    };
+
+    browserSpeak(
+      text,
+      resolvedCharacterId,
+      finish,
+      (err) => {
+        console.error('Browser speech error:', err);
+        setError(String(err));
+        finish();
+      }
+    );
+  }, [browserSupported]);
+
+  // Speak text with character voice. Prefers ElevenLabs, falls back to the
+  // browser's Web Speech API if ElevenLabs is unconfigured or fails.
   const speak = useCallback(async (text, characterId = 'narrator', style = 'narration', onComplete = null) => {
     // Stop any current audio
     stop();
@@ -94,6 +155,12 @@ export function VoiceProvider({ children }) {
     const resolvedCharacterId = characterId.includes(' ')
       ? speakerToCharacterId(characterId)
       : characterId;
+
+    // If ElevenLabs isn't available, go straight to the browser voice.
+    if (!useElevenLabs) {
+      speakWithBrowser(text, resolvedCharacterId, onComplete);
+      return;
+    }
 
     try {
       // Get the voice ID for this character
@@ -138,13 +205,13 @@ export function VoiceProvider({ children }) {
       };
 
     } catch (err) {
-      console.error('ElevenLabs speech generation error:', err);
+      // ElevenLabs failed (quota, deleted voice, network, bad key, etc.).
+      // Fall back to the browser voice so the game still speaks.
+      console.error('ElevenLabs speech generation error, falling back to browser voice:', err);
       setError(err.message);
-      setIsLoading(false);
-      setIsPlaying(false);
-      if (onComplete) onComplete();
+      speakWithBrowser(text, resolvedCharacterId, onComplete);
     }
-  }, [enabled, isSupported, stop]);
+  }, [enabled, isSupported, useElevenLabs, stop, speakWithBrowser]);
 
   // Preload is a no-op for now (could implement caching later)
   const preload = useCallback(() => {
@@ -175,7 +242,8 @@ export function VoiceProvider({ children }) {
     preload,
     clearCache,
     isSupported,
-    voicesReady: isSupported, // ElevenLabs is always "ready" if API is configured
+    usingFallback: !useElevenLabs && browserSupported,
+    voicesReady: isSupported,
   };
 
   return (
