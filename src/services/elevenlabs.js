@@ -6,6 +6,16 @@ import { normalizeCharacterId, speakerToCharacterId } from '../utils/characterUt
 const API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 const BASE_URL = 'https://api.elevenlabs.io/v1';
 
+// Model used for synthesis.
+// NOTE: model_id is now a REQUIRED field in the text-to-speech request body.
+// ElevenLabs removed the old implicit default (eleven_monolingual_v1), so
+// requests without a model_id fail. eleven_multilingual_v2 is a high-quality,
+// broadly available choice; swap to eleven_turbo_v2_5 for lower latency/cost.
+const MODEL_ID = import.meta.env.VITE_ELEVENLABS_MODEL_ID || 'eleven_multilingual_v2';
+
+// Output format (codec_samplerate_bitrate).
+const OUTPUT_FORMAT = 'mp3_44100_128';
+
 // Voice IDs - Custom voices from Adam's ElevenLabs account
 // Mapped from Wicked Smaht characters to Jazz Noir personalities
 export const VOICES = {
@@ -81,18 +91,23 @@ export async function generateSpeech(text, voiceId = VOICES.narrator, style = 'n
 
   const settings = VOICE_SETTINGS[style] || VOICE_SETTINGS.narration;
 
-  const response = await fetch(`${BASE_URL}/text-to-speech/${voiceId}`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'audio/mpeg',
-      'Content-Type': 'application/json',
-      'xi-api-key': API_KEY
-    },
-    body: JSON.stringify({
-      text,
-      voice_settings: settings
-    })
-  });
+  const response = await fetch(
+    `${BASE_URL}/text-to-speech/${voiceId}?output_format=${OUTPUT_FORMAT}`,
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'audio/mpeg',
+        'Content-Type': 'application/json',
+        'xi-api-key': API_KEY
+      },
+      body: JSON.stringify({
+        text,
+        // model_id is REQUIRED by the ElevenLabs API.
+        model_id: MODEL_ID,
+        voice_settings: settings
+      })
+    }
+  );
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
